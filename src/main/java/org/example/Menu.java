@@ -68,6 +68,11 @@ public class Menu {
 
         if (choice.equalsIgnoreCase("j")) {
             printMenu();
-        } else System.exit(0);
+        } else if (choice.equalsIgnoreCase("n")) {
+            System.exit(0);
+        } else {
+            System.out.println("Felaktig inmatning. Försök igen.");
+            returnToMenu();
+        }
     }
 }

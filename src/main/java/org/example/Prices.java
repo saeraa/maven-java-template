@@ -55,11 +55,11 @@ public class Prices {
         final Integer min = Integer.MIN_VALUE;
 
         for (int i = 0; i < prices.size(); i++) {
-            index[i] = prices.indexOf(pricesCopy.get(i));
-            prices.set(prices.indexOf(pricesCopy.get(i)), min);
+            index[i] = pricesCopy.indexOf(prices.get(i));
+            pricesCopy.set(pricesCopy.indexOf(prices.get(i)), min);
             System.out.printf("""
                     %02d-%02d: %d öre
-                    """, index[i], index[i] + 1, pricesCopy.get(i));
+                    """, index[i], index[i] + 1, prices.get(i));
         }
 
         returnToMenu();
