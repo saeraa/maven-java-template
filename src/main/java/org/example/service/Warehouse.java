@@ -1,5 +1,6 @@
 package org.example.service;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import org.example.entities.Category;
 import org.example.entities.Product;
 import org.example.entities.ProductRecord;
@@ -9,6 +10,7 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
+@ApplicationScoped
 public class Warehouse {
 
     private final List<Product> products = new CopyOnWriteArrayList<>();//new ArrayList<>();
