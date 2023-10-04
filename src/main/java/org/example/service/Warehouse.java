@@ -6,11 +6,12 @@ import org.example.entities.ProductRecord;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 public class Warehouse {
 
-    private final List<Product> products = new ArrayList<>();
+    private final List<Product> products = new CopyOnWriteArrayList<>();//new ArrayList<>();
     private final int maxRating = 10;
 
     public ProductRecord addProduct(ProductRecord product) {
@@ -111,7 +112,9 @@ public class Warehouse {
     public Map<String, Long> getProductsMappedByFirstLetter() {
         return products.stream()
                 .collect(Collectors
-                        .groupingBy(product -> product.getName().substring(0,1),
+                        .groupingByConcurrent(product -> product.getName().substring(0,1),
                                 Collectors.counting()));
+                       // .groupingBy(product -> product.getName().substring(0,1),
+                                //Collectors.counting()));
     }
 }
