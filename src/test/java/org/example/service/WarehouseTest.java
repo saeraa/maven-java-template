@@ -52,13 +52,14 @@ public class WarehouseTest {
 
     @Test
     void modifyProductThenProductChanged() {
-        Product product = new Product("Laptop", 8, Category.ELECTRONICS);
+        Product product = new Product("Laptop", 8, LocalDate.of(2023, 1, 1), LocalDate.of(2023, 1, 1), Category.ELECTRONICS);
         warehouse.addProduct(product.toRecord());
 
         ProductRecord modifyProduct = new ProductRecord(product.getId(), "Laptop", 8, LocalDate.now(), LocalDate.now(), Category.FOOD);
 
         ProductRecord modifiedProduct = warehouse.modifyProduct(modifyProduct);
 
+        assertNotEquals(LocalDate.of(2023, 1, 1), modifiedProduct.modifiedBy());
         assertEquals(Category.FOOD, modifiedProduct.category());
     }
 
