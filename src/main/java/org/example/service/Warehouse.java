@@ -11,9 +11,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class Warehouse {
+public class Warehouse implements WarehouseService {
 
-    private final List<Product> products = new CopyOnWriteArrayList<>();//new ArrayList<>();
+    private final List<Product> products = new CopyOnWriteArrayList<>();
     private final int maxRating = 10;
 
     public ProductRecord addProduct(ProductRecord product) {

@@ -1,5 +1,8 @@
 package org.example.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.*;
+
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
@@ -7,11 +10,30 @@ import java.util.UUID;
 public class Product {
 
     private final String id;
+
+    @NotEmpty(message = "Product name must not be empty")
+    @Pattern(regexp = "[a-z-A-Z]*", message = "Product name has invalid characters")
     private String name;
+
+    @Min(value=1, message = "Minimum rating is 1")
+    @Max(value = 10, message = "Maximum rating is 10")
     private int rating;
+    @JsonIgnore
+    @PastOrPresent(message = "CreatedBy date must be past or present")
     private final LocalDate createdBy;
+    @JsonIgnore
+    @FutureOrPresent(message = "ModifiedBy date must be future or present")
     private LocalDate modifiedBy;
     private Category category;
+
+    public Product() {
+        this(null, null);
+    }
+
+    public Product(String id, LocalDate createdBy) {
+        this.id = "id";
+        this.createdBy = LocalDate.now();
+    }
 
     public Product(ProductRecord product) {
         this.id = product.id();
