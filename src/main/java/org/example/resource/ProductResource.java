@@ -5,6 +5,8 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.example.entities.Product;
+import org.example.exception.MyException;
 import org.example.interceptor.Log;
 import org.example.entities.Category;
 import org.example.entities.ProductRecord;
@@ -28,7 +30,8 @@ public class ProductResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addProduct(@Valid ProductRecord product) {
-        return Response.ok(warehouse.addProduct(product), MediaType.APPLICATION_JSON).build();
+
+        return Response.ok(warehouse.addProduct(new Product(product).toRecord()), MediaType.APPLICATION_JSON).build();
     }
 
     @PATCH

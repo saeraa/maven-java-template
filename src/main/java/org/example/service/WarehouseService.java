@@ -1,5 +1,6 @@
 package org.example.service;
 
+import jakarta.ejb.Singleton;
 import org.example.entities.Category;
 import org.example.entities.ProductRecord;
 
@@ -7,6 +8,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+
+@Singleton
 public interface WarehouseService {
 
     public ProductRecord addProduct(ProductRecord product);
