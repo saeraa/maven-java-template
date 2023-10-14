@@ -13,16 +13,16 @@ import java.util.Optional;
 @Singleton
 public interface WarehouseService {
 
-    public ProductRecord addProduct(ProductRecord product);
-    public Optional<ProductRecord> modifyProduct(ProductRecord productInput);
-    public List<ProductRecord> getAllProducts();
-    public ProductRecord getProductById(String id);
-    public List<ProductRecord> getProductsByCategory(Category category);
-    public List<ProductRecord> getProductsAfterDate(LocalDate date);
-    public List<ProductRecord> getModifiedProducts();
-    public List<Category> getCategoriesWithProducts();
-    public List<String> getProductsForCategory(Category category);
-    public int getAmountOfProductsForCategory(Category category);
-    public List<ProductRecord> getProductsWithMaxRating();
-    public Map<String, Long> getProductsMappedByFirstLetter();
+    ProductRecord addProduct(ProductRecord product);
+    Optional<ProductRecord> modifyProduct(ProductRecord productInput);
+    List<ProductRecord> getAllProducts();
+    ProductRecord getProductById(String id);
+    List<ProductRecord> getProductsByCategory(Category category);
+    List<ProductRecord> getProductsAfterDate(LocalDate date);
+    List<ProductRecord> getModifiedProducts();
+    List<Category> getCategoriesWithProducts();
+    List<String> getProductsForCategory(Category category);
+    int getAmountOfProductsForCategory(Category category);
+    List<ProductRecord> getProductsWithMaxRating();
+    Map<String, Long> getProductsMappedByFirstLetter();
 }
