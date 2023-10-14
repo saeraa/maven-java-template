@@ -1,0 +1,57 @@
+Laboration2
+Laborationen går ut på att med hjälp av Jakarta EE 10, JAX-RS specifikationen implementera ett Rest api för
+Warehouse från laboration 3 i Java kursen.
+Steg1:
+Klassen Warehouse från tidigare laboration är troligen implementerad för att fungera i en single thread applikation
+och använder sig av ArrayList eller HashSet för att lagra produkter. Dessa collections är inte anpassade för att
+fungera i en applikation som använder sig av flera trådar samtidigt, (concurrency).
+Anpassningen kan göras på två olika sätt.
+Alternativ1: Göra förändringar direkt i koden för Warehouse och använda en synkroniserad lista eller set istället.
+Kan göras genom att byta ut collections mot concurrent anpassade versioner. Hittas i paketet java.util.concurrent
+- HashMap -> ConcurrentHashMap
+- ArrayList -> CopyOnWriteArrayList
+- TreeMap -> ConcurrentSkipListMap
+- PriorityQueue -> PriorityBlockingQueue
+Alternativ2: Skapa en helt ny klass att använda i det här projektet. Kalla den tex WarehouseService som erbjuder
+metoder som är anpassade för concurrency:
+@ConcurrencyManagement(ConcurrencyManagementType.BEAN)
+public class MyBean {
+ private final Lock lock = new ReentrantLock();
+ public void performConcurrentOperation() {
+ lock.lock();
+ try {
+ // Perform concurrent operation here
+ } finally {
+ lock.unlock();
+ }
+ }
+}
+WarehouseService skickar sen vidare sina anrop till Warehouse klassen och låter endast en tråd i taget exekvera
+metoder.
+Steg2:
+Implementera Resource klass/klasser med lämpliga endpoints för att hantera produkter och eventuell kategorier.
+Response och request object ska skickas som json data.
+Felhantering med lämpliga Responsekoder samt felmeddelanden ska implementeras.
+Inkommande parametrar ska valideras med hjälp av Bean Validation
+Loggmeddelanden från endpoints som tar inparametrar och vid fel.
+Minst följande funktioner ska finnas implementerade:
+ Lägga till ny produkt inklusive validering av inkommande värden.
+ Hämta alla produkter.
+ Hämta en produkt genom produktens id.
+ Hämta alla produkter som hör till en kategori.
+En extra funktion som kan vara trevligt att implementera är att man kan ange från vilken produkt och hur
+många som hämta alla ska returnera, så kallad paginering. (Handling Pagination With JAX-RS and
+NoSQL in Your Jakarta EE/MicroProfile Application - DZone)
+VG uppgift:
+Här vill vi skapa testmetoder för att validera responsekoder och data från våra resource metoder. Om vi bara
+skriver tester med Junit som anropar java metoderna i vår Resource klass så missar vi alla annotations som styr
+mycket av funktionerna. Vi behöver därför ett bättre sätt att testa våra endpoints utan att behöva starta upp en
+komplett webbserver och göra anrop via http. Det skulle isåfall vara integrationstestning och lite onödigt hög nivå
+och riskerar att testerna misslyckas på grund av nätverksfel, upptagna portar m.m.
+Eventuella andra objekt som Resource klassen använder sig av kan vi mocka med Mockito. Eftersom vi använder
+oss av Wildfly/Jboss som applikationsserver så är det lämpligt att även våra tester använder sig av samma
+implementation för att vi ska vara säkra på att det fungerar som tänkt. Det är RestEasy som är implementationen
+av jax-rs specifikationen.
+Använd MockDispatcherFactory och utgå från exempelkoden som gås igenom på föreläsningen. Försök att
+förbättra assert av json genom att använda något bibliotek eller konvertera json till objektrepresentation för att få
+en säkrare och mindre formatkänslig equals jämfört med att använda strings.

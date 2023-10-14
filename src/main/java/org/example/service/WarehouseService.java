@@ -7,13 +7,14 @@ import org.example.entities.ProductRecord;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Singleton
 public interface WarehouseService {
 
     public ProductRecord addProduct(ProductRecord product);
-    public ProductRecord modifyProduct(ProductRecord productInput);
+    public Optional<ProductRecord> modifyProduct(ProductRecord productInput);
     public List<ProductRecord> getAllProducts();
     public ProductRecord getProductById(String id);
     public List<ProductRecord> getProductsByCategory(Category category);

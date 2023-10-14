@@ -1,6 +1,7 @@
 package org.example.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.validation.Valid;
 import org.example.entities.Category;
 import org.example.entities.Product;
 import org.example.entities.ProductRecord;
@@ -16,11 +17,9 @@ public class Warehouse implements WarehouseService {
     private final List<Product> products = new CopyOnWriteArrayList<>();
     private final int maxRating = 10;
 
-    public ProductRecord addProduct(ProductRecord product) {
-        if (product.name() == null || product.name().isEmpty()) {
+    public ProductRecord addProduct(@Valid ProductRecord product) {
+      if (product.name() == null || product.name().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty when adding products");
-        } else if (product.rating() > maxRating) {
-            throw new IllegalArgumentException("That's not a valid rating, enter a number 1-10.");
         }
 
         Product newProduct = new Product(product);
@@ -29,7 +28,7 @@ public class Warehouse implements WarehouseService {
         return newProduct.toRecord();
     }
 
-    public ProductRecord modifyProduct(ProductRecord productInput) {
+    public Optional<ProductRecord> modifyProduct(@Valid ProductRecord productInput) {
         return products.stream().filter(p -> p.getId().equals(productInput.id())).findFirst()
                 .map(product -> {
                     product.setModifiedBy(LocalDate.now());
@@ -37,7 +36,7 @@ public class Warehouse implements WarehouseService {
                     product.setRating(productInput.rating());
                     product.setName(productInput.name());
                     return product.toRecord();
-                }).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+                });
     }
 
     public List<ProductRecord> getAllProducts() {
@@ -116,7 +115,5 @@ public class Warehouse implements WarehouseService {
                 .collect(Collectors
                         .groupingByConcurrent(product -> product.getName().substring(0,1),
                                 Collectors.counting()));
-                       // .groupingBy(product -> product.getName().substring(0,1),
-                                //Collectors.counting()));
     }
 }

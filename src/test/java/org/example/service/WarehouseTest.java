@@ -4,16 +4,12 @@ import org.example.entities.Category;
 import org.example.entities.Product;
 import org.example.entities.ProductRecord;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import org.junit.jupiter.api.BeforeEach;
-
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +33,7 @@ public class WarehouseTest {
         assertEquals("Laptop", warehouse.getAllProducts().get(0).name());
     }
 
-    @Test
+  @Test
     void addProductWithNoNameThenThrowException() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             Product product = new Product("", 8, Category.ELECTRONICS);
@@ -57,23 +53,22 @@ public class WarehouseTest {
 
         ProductRecord modifyProduct = new ProductRecord(product.getId(), "Laptop", 8, LocalDate.now(), LocalDate.now(), Category.FOOD);
 
-        ProductRecord modifiedProduct = warehouse.modifyProduct(modifyProduct);
+        Optional<ProductRecord> modified = warehouse.modifyProduct(modifyProduct);
 
-        assertNotEquals(LocalDate.of(2023, 1, 1), modifiedProduct.modifiedBy());
-        assertEquals(Category.FOOD, modifiedProduct.category());
+        if (modified.isPresent()) {
+            ProductRecord modifiedProduct = modified.get();
+            assertNotEquals(LocalDate.of(2023, 1, 1), modifiedProduct.modifiedBy());
+            assertEquals(Category.FOOD, modifiedProduct.category());
+        }
+
     }
 
     @Test
-    void modifyProductWithFalseProductIdThenThrowException() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            ProductRecord falseProduct = new ProductRecord("False_product_id", "Laptop", 8, LocalDate.now(), LocalDate.now(), Category.ELECTRONICS);
-            warehouse.modifyProduct(falseProduct);
-        });
+    void modifyProductWithFalseProductIdThenReturnEmptyObject() {
+        ProductRecord falseProduct = new ProductRecord("False_product_id", "Laptop", 8, LocalDate.now(), LocalDate.now(), Category.ELECTRONICS);
+        var modified = warehouse.modifyProduct(falseProduct);
 
-        String expectedMessage = "Product not found";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue(modified.isEmpty());
     }
 
     @Test

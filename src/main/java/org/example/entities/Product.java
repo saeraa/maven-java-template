@@ -1,6 +1,6 @@
 package org.example.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
@@ -18,10 +18,12 @@ public class Product {
     @Min(value=1, message = "Minimum rating is 1")
     @Max(value = 10, message = "Maximum rating is 10")
     private int rating;
-    @JsonIgnore
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @PastOrPresent(message = "CreatedBy date must be past or present")
     private final LocalDate createdBy;
-    @JsonIgnore
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @FutureOrPresent(message = "ModifiedBy date must be future or present")
     private LocalDate modifiedBy;
     private Category category;

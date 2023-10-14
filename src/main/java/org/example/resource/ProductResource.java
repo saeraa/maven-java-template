@@ -6,7 +6,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.example.entities.Product;
-import org.example.exception.MyException;
 import org.example.interceptor.Log;
 import org.example.entities.Category;
 import org.example.entities.ProductRecord;
@@ -30,27 +29,28 @@ public class ProductResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addProduct(@Valid ProductRecord product) {
+        var rating = product.rating();
+        var name = product.name();
+        var category = product.category();
 
-        return Response.ok(warehouse.addProduct(new Product(product).toRecord()), MediaType.APPLICATION_JSON).build();
+        Product newProduct = new Product(name, rating, category);
+
+        return Response.status(201).entity(warehouse.addProduct(newProduct.toRecord())).build();
     }
 
     @PATCH
     @Consumes(MediaType.APPLICATION_JSON)
-    public ProductRecord modifyProduct(@Valid ProductRecord product) { return product; }
+    public Response modifyProduct(@Valid ProductRecord product) {
+        return Response.status(401).entity(warehouse.modifyProduct(product)).build();
+    }
 
     @GET
-    public Response getAllProducts(@QueryParam("category") String category) {
-/*
-        warehouse.addProduct(new ProductRecord("", "Laptop", 2, LocalDate.now(), LocalDate.now(), Category.BOOKS));
-        warehouse.addProduct(new ProductRecord("", "Laptop2", 2, LocalDate.now(), LocalDate.now(), Category.BOOKS));
-        warehouse.addProduct(new ProductRecord("", "Laptop3", 2, LocalDate.now(), LocalDate.now(), Category.BOOKS));
-*/
+    public Response getAllProducts(@Valid @QueryParam("category") String category) {
 
         if (category != null) {
             System.out.println(warehouse.getProductsByCategory(Category.valueOf(category.toUpperCase())));
             return Response.ok(warehouse.getProductsByCategory(Category.valueOf(category.toUpperCase())), MediaType.APPLICATION_JSON).status(200).build();
         }
-
 
         return Response.ok(warehouse.getAllProducts(), MediaType.APPLICATION_JSON).build();
     }
@@ -60,10 +60,5 @@ public class ProductResource {
     public ProductRecord getProductById(@PathParam("id") String id) {
         return warehouse.getProductById(id);
     }
-
-/*    @GET
-    public List<ProductRecord> getProductsByCategory(@QueryParam("category") Category category) {
-        return warehouse.getProductsByCategory(category);
-    }*/
 
 }
