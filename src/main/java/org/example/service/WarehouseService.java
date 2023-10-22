@@ -1,6 +1,7 @@
 package org.example.service;
 
 import jakarta.ejb.Singleton;
+import jakarta.validation.Valid;
 import org.example.entities.Category;
 import org.example.entities.ProductRecord;
 
@@ -13,8 +14,8 @@ import java.util.Optional;
 @Singleton
 public interface WarehouseService {
 
-    ProductRecord addProduct(ProductRecord product);
-    Optional<ProductRecord> modifyProduct(ProductRecord productInput);
+    ProductRecord addProduct(@Valid ProductRecord product);
+    Optional<ProductRecord> modifyProduct(@Valid ProductRecord productInput);
     List<ProductRecord> getAllProducts();
     ProductRecord getProductById(String id);
     List<ProductRecord> getProductsByCategory(Category category);
